@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BS グラフ</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        canvas {
+            max-width: 100%;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BS 割合グラフ</h1>
+        <canvas id="bsChart"></canvas>
+
+        <!-- 指標の表 -->
+        <h2>財務指標</h2>
+        <table>
+            <tr>
+                <th>指標</th>
+                <th>計算式</th>
+                <th>値</th>
+            </tr>
+            <tr>
+                <td>流動比率</td>
+                <td>流動資産 ÷ 流動負債 × 100</td>
+                <td th:text="${currentRatio} + '%'"></td>
+            </tr>
+            <tr>
+                <td>ROA</td>
+                <td>当期純利益 ÷ 総資産 × 100</td>
+                <td th:text="${roa} + '%'"></td>
+            </tr>
+            <tr>
+                <td>ROE</td>
+                <td>当期純利益 ÷ 自己資本 × 100</td>
+                <td th:text="${roe} + '%'"></td>
+            </tr>
+        </table>
+
+        <br>
+        <a th:href="@{/report/BS}">戻る</a>
+    </div>
+	<button id="downloadPdf">PDFをダウンロード</button>
+
+    <script th:inline="javascript">
+		
+        Chart.register(ChartDataLabels);
+
+        var assets = /*[[${assets}]]*/ 0; // 資産
+        var liabilities = /*[[${liabilities}]]*/ 0; // 負債
+        var capital = /*[[${capital}]]*/ 0; // 資本
+
+        var totalAssets = assets; // 資産の合計
+
+        var ctx = document.getElementById('bsChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['BS'],
+                datasets: [
+                    {
+                        label: '資産',
+                        data: [totalAssets],
+                        backgroundColor: '#36A2EB',
+                        borderWidth: 1,
+                        barPercentage: 1,
+                        categoryPercentage: 1,
+                    },
+                    {
+                        label: '資本',
+                        data: [capital],
+                        backgroundColor: '#FFCE56',
+                        borderWidth: 1,
+                        stack: 'stack1',
+                        barPercentage: 1,
+                        categoryPercentage: 1,
+                    },
+                    {
+                        label: '負債',
+                        data: [liabilities],
+                        backgroundColor: '#FF6384',
+                        borderWidth: 1,
+                        stack: 'stack1',
+                        barPercentage: 1,
+                        categoryPercentage: 1,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: { display: false },
+                        ticks: {
+                            font: { size: 14 }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: totalAssets,
+                        grid: { display: false },
+                        ticks: {
+                            font: { size: 14 },
+                            callback: function(value) {
+                                var percentage = (value / totalAssets) * 100;
+                                return percentage.toFixed(0) + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                var value = tooltipItem.raw;
+                                return value.toLocaleString() + '円';
+                            },
+                            title: function() {
+                                return '';
+                            }
+                        }
+                    },
+                    datalabels: {
+                        display: true,
+                        color: 'black',
+                        font: { size: 14, weight: 'bold' },
+                        formatter: function(value) {
+                            var total = totalAssets;
+                            var percentage = (value / total) * 100;
+                            return percentage.toFixed(0) + '%';
+                        }
+                    }
+                }
+            }
+        });
+		//pdfダウンロード
+		document.getElementById('downloadPdf').addEventListener('click', function () {
+		    const { jsPDF } = window.jspdf;
+		    const pdf = new jsPDF('p', 'mm', 'a4');
+		    const container = document.querySelector('.container');
+		    const backLink = document.querySelector('a'); // 「戻る」リンクを取得
+		    const downloadButton = document.getElementById('downloadPdf');
+
+		    // 「戻る」リンクがあれば非表示にする
+		    if (backLink) backLink.style.display = 'none';
+		    downloadButton.style.display = 'none';
+
+		    html2canvas(container).then(canvas => {
+		        const imgData = canvas.toDataURL('image/png');
+		        const imgWidth = 190;
+		        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+		        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+		        pdf.save("BS_Report.pdf");
+
+		        // 元に戻す
+		        if (backLink) backLink.style.display = '';
+		        downloadButton.style.display = '';
+		    });
+		});
+
+    </script>
+</body>
+</html>

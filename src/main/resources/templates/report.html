@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf Example</title>
+</head>
+<body>
+    <h1 th:text="${message}">Placeholder text</h1>
+    <h3 th:text="${notice}">Placeholder text</h3>
+
+    <!-- ラジオボタン付きのフォーム -->
+    <form th:action="@{/report/judge}" method="get">
+        <label>
+            <input type="radio" name="option" value="1" checked>BS
+        </label>
+        <label>
+            <input type="radio" name="option" value="2" disabled>PL
+        </label>
+        <label>
+            <input type="radio" name="option" value="3" disabled>CS
+        </label>
+        <br>
+		<label for="title">タイトル：</label>
+		<input type="text" id="title" name="title" maxlength="255" required>
+		<br>
+
+	
+        <!-- セレクトボックス（1回・毎月・毎週） -->
+        <label for="frequency">頻度を選択：</label>
+        <select name="frequency" id="frequency">
+            <option value="onetime">1回</option>
+            <option value="weekly">毎週</option>
+            <option value="monthly">毎月</option>
+        </select>
+        <br>
+
+        <!-- 送信ボタン -->
+        <button type="submit">作成する</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,311 @@
+	<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BS 作成</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            max-width: 800px;
+            margin: 30px auto;
+            border: 2px solid #000;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: stretch;
+        }
+
+        .section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 5px 0;
+        }
+
+        /* 左側（資産） */
+        .assets {
+            background-color: #d1ecf1;
+        }
+
+        /* 右側（負債・資本） */
+        .liabilities {
+            background-color: #f8d7da;
+        }
+
+        .equity {
+            background-color: #fff3cd;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 80%;
+            padding: 5px;
+            font-size: 16px;
+			-moz-appearance: textfield;  /* Firefox の矢印を非表示に */
+			text-align: right;  /* 数字を右寄せにする */
+        }
+
+        input[readonly] {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+		.error {
+		    color: red;
+		    font-weight: bold;
+		    text-align: center;
+		    margin-bottom: 20px;
+		}
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">BS 作成ページ</h1>
+	<div th:if="${error}" class="error">
+	    <p th:text="${error}"></p>
+	</div>
+	<div th:if="${errorDetail}" class="error">
+	    <p th:text="${errorDetail}"></p>
+	</div>
+    <form action="#" th:action="@{/report/BS}" th:object="${bsDto}" method="post">
+        <div class="container">
+            <!-- 左側（資産） -->
+            <div class="column">
+                <div class="section assets">
+                    <h2>流動資産</h2>
+                    <div class="form-group">
+                        <label for="cash">現金・預金:</label>
+                        <input type="number" id="cash" name="cash" th:field="*{cash}" required value="0" oninput="calculateCurrentAssets()">
+                    </div>
+                    <div class="form-group">
+                        <label for="notesReceivable">受取手形:</label>
+                        <input type="number" id="notesReceivable" name="notesReceivable" th:field="*{notesReceivable}" required value="0" oninput="calculateCurrentAssets()">
+                    </div>
+                    <div class="form-group">
+                        <label for="accountsReceivable">売掛金:</label>
+                        <input type="number" id="accountsReceivable" name="accountsReceivable" th:field="*{accountsReceivable}" required value="0" oninput="calculateCurrentAssets()">
+                    </div>
+                    <div class="form-group">
+                        <label for="securities">有価証券:</label>
+                        <input type="number" id="securities" name="securities" th:field="*{securities}" required value="0" oninput="calculateCurrentAssets()">
+                    </div>
+                    <div class="form-group">
+                        <label for="inventory">商品:</label>
+                        <input type="number" id="inventory" name="inventory" th:field="*{inventory}" required value="0" oninput="calculateCurrentAssets()">
+                    </div>
+                    <div class="form-group">
+                        <label for="allowanceForDoubtfulAccounts">貸倒引当金:</label>
+                        <input type="number" id="allowanceForDoubtfulAccounts" name="allowanceForDoubtfulAccounts" th:field="*{allowanceForDoubtfulAccounts}" required value="0" oninput="calculateCurrentAssets()">
+                    </div>
+                    <div class="form-group">
+                        <label for="otherCurrentAssets">その他:</label>
+                        <input type="number" id="otherCurrentAssets" name="otherCurrentAssets" th:field="*{otherCurrentAssets}" required value="0" oninput="calculateCurrentAssets()">
+                    </div>
+                    <h3>流動資産合計</h3>
+                    <div class="form-group">
+                        <input type="number" id="totalCurrentAssets" name="totalCurrentAssets" th:field="*{totalCurrentAssets}" readonly>
+                    </div>
+                </div>
+
+                <div class="section assets">
+                    <h2>固定資産</h2>
+                    <div class="form-group">
+                        <label for="land">土地:</label>
+                        <input type="number" id="land" name="land" th:field="*{land}" required value="0" oninput="calculateFixedAssets()">
+                    </div>
+                    <div class="form-group">
+                        <label for="building">建物:</label>
+                        <input type="number" id="building" name="building" th:field="*{building}" required value="0" oninput="calculateFixedAssets()">
+                    </div>
+                    <div class="form-group">
+                        <label for="equipment">設備:</label>
+                        <input type="number" id="equipment" name="equipment" th:field="*{equipment}" required value="0" oninput="calculateFixedAssets()">
+                    </div>
+                    <div class="form-group">
+                        <label for="otherFixedAssets">その他:</label>
+                        <input type="number" id="otherFixedAssets" name="otherFixedAssets" th:field="*{otherFixedAssets}" required value="0" oninput="calculateFixedAssets()">
+                    </div>
+                    <div class="form-group">
+                        <h3>固定資産合計</h3>
+                        <input type="number" id="totalFixedAssets" name="totalFixedAssets" th:field="*{totalFixedAssets}" readonly>
+                    </div>
+                </div>
+                <div class="section assets">
+                    <h2>*資産合計</h2>
+                    <div class="form-group">
+                        <input type="number" id="totalAssets" name="totalAssets" th:field="*{totalAssets}" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側（負債・資本） -->
+            <div class="column">
+                <div class="section liabilities">
+                    <h2>流動負債</h2>
+                    <div class="form-group">
+                        <label for="shortTermDebt">短期借入金:</label>
+                        <input type="number" id="shortTermDebt" name="shortTermDebt" th:field="*{shortTermDebt}" required value="0" oninput="calculateLiabilities()">
+                    </div>
+                    <div class="form-group">
+                        <label for="accountsPayable">買掛金:</label>
+                        <input type="number" id="accountsPayable" name="accountsPayable" th:field="*{accountsPayable}" required value="0" oninput="calculateLiabilities()">
+                    </div>
+                    <div class="form-group">
+                        <label for="otherCurrentLiabilities">その他:</label>
+                        <input type="number" id="otherCurrentLiabilities" name="otherCurrentLiabilities" th:field="*{otherCurrentLiabilities}" required value="0" oninput="calculateLiabilities()">
+                    </div>
+                    <div class="form-group">
+                        <h3>流動負債合計</h3>
+                        <input type="number" id="totalCurrentLiabilities" name="totalCurrentLiabilities" th:field="*{totalCurrentLiabilities}" readonly>
+                    </div>
+                </div>
+
+                <div class="section liabilities">
+                    <h2>固定負債</h2>
+                    <div class="form-group">
+                        <label for="longTermDebt">長期借入金:</label>
+                        <input type="number" id="longTermDebt" name="longTermDebt" th:field="*{longTermDebt}" required value="0" oninput="calculateLiabilities()">
+                    </div>
+                    <div class="form-group">
+                        <label for="otherFixedLiabilities">その他:</label>
+                        <input type="number" id="otherFixedLiabilities" name="otherFixedLiabilities" th:field="*{otherFixedLiabilities}" required value="0" oninput="calculateLiabilities()">
+                    </div>
+                    <div class="form-group">
+                        <h3>固定負債合計</h3>
+                        <input type="number" id="totalFixedLiabilities" name="totalFixedLiabilities" th:field="*{totalFixedLiabilities}" readonly>
+                    </div>
+                </div>
+                <div class="section liabilities">
+                    <h2>*負債合計</h2>
+                    <div class="form-group">
+                        <input type="number" id="totalLiabilities" name="totalLiabilities" th:field="*{totalLiabilities}" readonly>
+                    </div>
+                </div>
+                <div class="section equity">
+                    <h2>資本</h2>
+                    <div class="form-group">
+                        <label for="capital">資本金:</label>
+                        <input type="number" id="capital" name="capital" th:field="*{capital}" required value="0" oninput="calculateCapital()">
+                    </div>
+                    <div class="form-group">
+                        <label for="retainedEarnings">利益剰余金:</label>
+                        <input type="number" id="retainedEarnings" name="retainedEarnings" th:field="*{retainedEarnings}" required value="0" oninput="calculateCapital()">
+                    </div>
+                    <div class="form-group">
+                        <h2>*資本合計</h2>
+                        <input type="number" id="totalCapital" name="totalCapital" th:field="*{totalCapital}" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit">登録</button>
+    </form>
+
+    <div class="back-link">
+        <a th:href="@{/}">戻る</a>
+    </div>
+
+    <script>
+		// ページが読み込まれたときに計算を実行
+		//window.onload = function() {
+		    //calculateCurrentAssets();
+		    //calculateFixedAssets();
+		    //calculateLiabilities();
+		    //calculateCapital();
+		//};
+        function calculateCurrentAssets() {
+            let cash = parseFloat(document.getElementById("cash").value) || 0;
+            let notesReceivable = parseFloat(document.getElementById("notesReceivable").value) || 0;
+            let accountsReceivable = parseFloat(document.getElementById("accountsReceivable").value) || 0;
+            let securities = parseFloat(document.getElementById("securities").value) || 0;
+            let inventory = parseFloat(document.getElementById("inventory").value) || 0;
+            let allowance = parseFloat(document.getElementById("allowanceForDoubtfulAccounts").value) || 0;
+            let other = parseFloat(document.getElementById("otherCurrentAssets").value) || 0;
+            
+            let totalCurrentAssets = cash + notesReceivable + accountsReceivable + securities + inventory - allowance + other;
+            document.getElementById("totalCurrentAssets").value = totalCurrentAssets;
+            calculateTotalAssets();
+        }
+
+        function calculateFixedAssets() {
+            let land = parseFloat(document.getElementById("land").value) || 0;
+            let building = parseFloat(document.getElementById("building").value) || 0;
+            let equipment = parseFloat(document.getElementById("equipment").value) || 0;
+            let otherFixedAssets = parseFloat(document.getElementById("otherFixedAssets").value) || 0;
+
+            let totalFixedAssets = land + building + equipment + otherFixedAssets;
+            document.getElementById("totalFixedAssets").value = totalFixedAssets;
+            calculateTotalAssets();
+        }
+
+        function calculateTotalAssets() {
+            let currentAssets = parseFloat(document.getElementById("totalCurrentAssets").value) || 0;
+            let fixedAssets = parseFloat(document.getElementById("totalFixedAssets").value) || 0;
+            document.getElementById("totalAssets").value = currentAssets + fixedAssets;
+        }
+        
+        function calculateLiabilities() {
+            let shortTermDebt = parseFloat(document.getElementById("shortTermDebt").value) || 0;
+            let accountsPayable = parseFloat(document.getElementById("accountsPayable").value) || 0;
+            let otherCurrentLiabilities = parseFloat(document.getElementById("otherCurrentLiabilities").value) || 0;
+            let longTermDebt = parseFloat(document.getElementById("longTermDebt").value) || 0;
+            let otherFixedLiabilities = parseFloat(document.getElementById("otherFixedLiabilities").value) || 0;
+
+            let totalCurrentLiabilities = shortTermDebt + accountsPayable + otherCurrentLiabilities;
+            let totalFixedLiabilities = longTermDebt + otherFixedLiabilities;
+            let totalLiabilities = totalCurrentLiabilities + totalFixedLiabilities;
+
+            document.getElementById("totalCurrentLiabilities").value = totalCurrentLiabilities;
+            document.getElementById("totalFixedLiabilities").value = totalFixedLiabilities;
+            document.getElementById("totalLiabilities").value = totalLiabilities; // 負債合計を設定
+        }
+        
+        function calculateCapital() {
+            let capital = parseFloat(document.getElementById("capital").value) || 0;
+            let retainedEarnings = parseFloat(document.getElementById("retainedEarnings").value) || 0;
+
+            let totalCapital = capital + retainedEarnings;
+            document.getElementById("totalCapital").value = totalCapital;
+        }
+    </script>
+</body>
+</html>

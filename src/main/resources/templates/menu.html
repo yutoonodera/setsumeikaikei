@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>レポート作成</title>
+</head>
+<body>
+    <h1 th:text="${message}">Placeholder text</h1>
+	<h3 th:text="${notice}">Placeholder text</h3>
+	<p>データ件数: <span th:text="${historyCount}"></span> 件</p>
+    <!-- ボタン -->
+	<form th:action="@{/report}" method="get">
+	    <button type="submit" name="option" value="onetime">新規作成</button>
+	    <button type="submit" disabled>継続作成</button>
+	    <button type="submit" disabled>履歴</button>
+	</form>
+</body>
+</html>
