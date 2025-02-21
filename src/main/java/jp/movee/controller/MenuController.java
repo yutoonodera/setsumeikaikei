@@ -1,24 +1,31 @@
 package jp.movee.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import jp.movee.repository.CreateReportHistoryRepository;
-import jp.movee.util.Constants;
 import lombok.RequiredArgsConstructor;
 
-@Controller
+
+@RestController
+@CrossOrigin(origins = "*") 
 @RequiredArgsConstructor
+@ResponseBody
 public class MenuController {
 	
 	private final CreateReportHistoryRepository createReportHistoryRepository;
-    @GetMapping(name = Constants.TOP_URL)
-    public String home(Model model) {
-    	long count = createReportHistoryRepository.count();
-    	model.addAttribute("message", "選択してください");
-    	model.addAttribute("notice", "継続作成、閲覧はログイン後に利用可能です");
-        model.addAttribute("historyCount", count);
-        return "menu"; // menu.html テンプレートを返す
+    @GetMapping("/api/v1")
+    public Map<String, Object> home() {
+        long count = createReportHistoryRepository.count();
+        Map<String, Object> menuResponse = new HashMap<>();
+        menuResponse.put("message", "選択してください");
+        menuResponse.put("notice", "継続作成、閲覧はログイン後に利用可能です");
+        menuResponse.put("historyCount", count);
+        return menuResponse;
     }
 }
