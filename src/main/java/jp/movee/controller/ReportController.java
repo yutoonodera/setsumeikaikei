@@ -1,39 +1,49 @@
 package jp.movee.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import jp.movee.service.BsService;
 import jp.movee.service.CreateReportHistoryService;
 
-@Controller
+@RestController
+@CrossOrigin(origins = "*")
 public class ReportController {
-	private final BsService bsService;
+    private final BsService bsService;
     private final CreateReportHistoryService historyService;
 
     public ReportController(BsService bsService, CreateReportHistoryService historyService) {
         this.bsService = bsService;
         this.historyService = historyService;
     }
-	
-    @GetMapping("/report")
-    public String handleMenu(@RequestParam(defaultValue = "") String option, Model model) {
-        model.addAttribute("message", "メニューを選択してください");
-        model.addAttribute("notice", "PL、CSは作成予定です");
+
+    @GetMapping("/api/report")
+    public Map<String, String> handleMenu(@RequestParam(defaultValue = "") String option) {
+        Map<String, String> reportResponse = new HashMap<>();
+        reportResponse.put("message", "メニューを選択してください");
+        reportResponse.put("notice", "PL、CSは作成予定です");
+
         if ("onetime".equals(option)) {
-            return "report"; // report.html に遷移
+            reportResponse.put("redirect", "/report"); // Reactでのリダイレクト先
+        } else {
+        	reportResponse.put("redirect", "/"); // Reactでのリダイレクト先
         }
-        return "menu"; // menu.html に戻る
+
+        return reportResponse;
     }
     
-    @GetMapping("/report/judge")
-    public String createHistory(
-            @RequestParam(defaultValue = "") String option,
-            @RequestParam(defaultValue = "") String title,
-            @RequestParam(defaultValue = "onetime") String frequency,
-            Model model) {
+    @PostMapping("/api/report/register")
+    public Map<String, String> createHistory(@RequestBody Map<String, String> formData) {
+        String option = formData.get("option");
+        String title = formData.get("title");
+        String frequency = formData.get("frequency");
 
         // メニューIDを決定（例: BS=1, PL=2, CS=3）
         int menuId;
@@ -61,9 +71,18 @@ public class ReportController {
         long bsId = bsService.saveHistory(title, menuId, reportId);
         // `create_report_history` にデータ登録
         historyService.saveHistory(menuId, reportId, bsId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "データが正常に登録されました");
+
         if ("1".equals(option)) {
-            return "redirect:/report/BS"; // create.html に遷移
+            response.put("redirect", "/report/bs");
+        } else if ("2".equals(option)) {
+            response.put("redirect", "/report/pl");
+        } else {
+            response.put("redirect", "/report");
         }
-        return "report"; // report.html に戻る
+
+        return response;
     }
 }

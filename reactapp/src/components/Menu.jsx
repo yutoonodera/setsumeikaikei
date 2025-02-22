@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Menu = () => {
   const [menuResponse, setMenuResponse] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     // APIをfetchする(呼び出す)
@@ -14,23 +16,27 @@ export const Menu = () => {
       });
   }, []);
 
+  const handleNavigate = (option) => {
+    navigate(`/report?option=${option}`);
+  };
+
   return (
     <div>
       <h1>{menuResponse.message || "Placeholder text"}</h1>
       <h3>{menuResponse.notice || "Placeholder text"}</h3>
       <p>データ件数: {menuResponse.historyCount} 件</p>
       {/* ボタン */}
-      <form action="/report" method="get">
-        <button type="submit" name="option" value="onetime">
+      <div>
+        <button type="button" name="option" value="onetime" onClick={() => handleNavigate("onetime")}>
           新規作成
         </button>
-        <button type="submit" disabled>
+        <button type="button" disabled>
           継続作成
         </button>
-        <button type="submit" disabled>
+        <button type="button" disabled>
           履歴
         </button>
-      </form>
+      </div>
     </div>
   );
 };
