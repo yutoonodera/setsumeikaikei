@@ -13,10 +13,10 @@
 
 .modal-content {
   background-color: white;
-  margin: 15% auto;
+  margin: 5% auto; /* 上部に表示されるように変更 */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 40%; /* 幅を半分に設定 */
 }
 
 .close {
