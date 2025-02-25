@@ -3,6 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+##Java配下に置くreactビルドファイル
+!**/src/main/resources/static/
 
 ### STS ###
 .apt_generated
