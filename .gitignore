@@ -4,7 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 ##Java配下に置くreactビルドファイル
-!**/src/main/resources/static/
+src/main/resources/static/
 
 ### STS ###
 .apt_generated
