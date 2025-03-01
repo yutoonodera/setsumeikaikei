@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Menu } from './components/Menu';
 import { Report } from './components/Report';
 import { Bs } from './components/Bs';
+import BsGraph from './components/BsGraph';
 import { Pl } from './components/Pl';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
             <Route path="/" element={<Menu />} />
             <Route path="/report" element={<Report />} />
             <Route path="/report/bs" element={<Bs />} />
+			<Route path="/bsgraph" element={<BsGraph />} />
             <Route path="/report/pl" element={<Pl />} />
           </Routes>
         </header>
