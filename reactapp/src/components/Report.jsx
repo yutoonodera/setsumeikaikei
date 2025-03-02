@@ -4,16 +4,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const Report = () => {
   const [reportResponse, setReportResponse] = useState({});
   const [responseMessage, setResponseMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");  // エラーメッセージのステートを追加
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const reportOption = searchParams.get("option");
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    option: reportOption,
+    reportOption: reportOption,
     title: "",
     frequency: "onetime"
   });
-
 
   useEffect(() => {
     console.log('Fetching report data...');
@@ -23,13 +23,13 @@ export const Report = () => {
         setReportResponse(data);
         setFormData((prevData) => ({
           ...prevData,
-          option: reportOption
+          reportOption: reportOption
         }));
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [reportOption	]);
+  }, [reportOption]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,6 +41,13 @@ export const Report = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // バリデーションを追加
+    if (!formData.title) {
+      setErrorMessage("エラー: タイトルを入力してください。");
+      return;
+    }
+
     fetch("http://localhost:8080/api/report/register", {
       method: "POST",
       headers: {
@@ -51,6 +58,7 @@ export const Report = () => {
       .then((res) => res.json())
       .then((data) => {
         setResponseMessage(data.message);
+        setErrorMessage("");  // 成功時にはエラーメッセージをクリア
         if (data.redirect) {
           navigate(data.redirect);
         }
@@ -106,7 +114,6 @@ export const Report = () => {
           value={formData.title}
           onChange={handleInputChange}
           maxLength="255"
-          required
         />
         <br />
         <label htmlFor="frequency">頻度を選択：</label>
@@ -123,6 +130,7 @@ export const Report = () => {
         <br />
         <button type="submit">作成する</button>
       </form>
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
       {responseMessage && <p>{responseMessage}</p>}
     </div>
   );
