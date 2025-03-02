@@ -41,13 +41,14 @@ public class ReportController {
     
     @PostMapping("/api/report/register")
     public Map<String, String> createHistory(@RequestBody Map<String, String> formData) {
-        String option = formData.get("option");
+        String reportOption = formData.get("reportOption");
+        String reportType = formData.get("reportType");
         String title = formData.get("title");
         String frequency = formData.get("frequency");
 
         // メニューIDを決定（例: BS=1, PL=2, CS=3）
         int menuId;
-        switch (option) {
+        switch (reportType) {
             case "1":
                 menuId = 1;
                 break;
@@ -75,9 +76,9 @@ public class ReportController {
         Map<String, String> response = new HashMap<>();
         response.put("message", "データが正常に登録されました");
 
-        if ("1".equals(option)) {
+        if ("1".equals(reportType)) {
             response.put("redirect", "/report/bs");
-        } else if ("2".equals(option)) {
+        } else if ("2".equals(reportType)) {
             response.put("redirect", "/report/pl");
         } else {
             response.put("redirect", "/report");

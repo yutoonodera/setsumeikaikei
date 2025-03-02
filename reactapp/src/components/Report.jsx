@@ -4,13 +4,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const Report = () => {
   const [reportResponse, setReportResponse] = useState({});
   const [responseMessage, setResponseMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");  // エラーメッセージのステートを追加
+  const [errorMessage, setErrorMessage] = useState(""); // エラーメッセージのステートを追加
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const reportOption = searchParams.get("option");
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     reportOption: reportOption,
+    reportType: "1",
     title: "",
     frequency: "onetime"
   });
@@ -33,9 +34,16 @@ export const Report = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value
+    }));
+  };
+
+  const handleRadioChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      reportType: e.target.value
     }));
   };
 
@@ -43,6 +51,10 @@ export const Report = () => {
     e.preventDefault();
 
     // バリデーションを追加
+    if (!formData.reportType) {
+      setErrorMessage("エラー: タイプを選択してください。");
+      return;
+    }
     if (!formData.title) {
       setErrorMessage("エラー: タイトルを入力してください。");
       return;
@@ -78,30 +90,32 @@ export const Report = () => {
         <label>
           <input
             type="radio"
-            name="option"
+            name="reportType"
             value="1"
-            checked={formData.option === "1"}
-            onChange={handleInputChange}
+            checked={formData.reportType === "1"}
+            onChange={handleRadioChange}
           />
           BS
         </label>
         <label>
           <input
             type="radio"
-            name="option"
+            name="reportType"
             value="2"
-            disabled
-            onChange={handleInputChange}
+            checked={formData.reportType === "2"}
+            onChange={handleRadioChange}
+			disabled
           />
           PL
         </label>
         <label>
           <input
             type="radio"
-            name="option"
+            name="reportType"
             value="3"
+            checked={formData.reportType === "3"}
+            onChange={handleRadioChange}
             disabled
-            onChange={handleInputChange}
           />
           CS
         </label>
