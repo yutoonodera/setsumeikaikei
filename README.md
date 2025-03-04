@@ -8,3 +8,4 @@ v21
 ### reactバージョン
 v19
 ### オープンソースライセンス
+Apache-2.0 license
