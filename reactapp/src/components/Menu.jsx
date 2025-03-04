@@ -16,8 +16,8 @@ export const Menu = () => {
       });
   }, []);
 
-  const handleNavigate = (option) => {
-    navigate(`/report?option=${option}`);
+  const handleNavigate = (creationType) => {
+    navigate(`/report?creationType=${creationType}`);
   };
 
   return (
@@ -27,13 +27,13 @@ export const Menu = () => {
       <p>データ件数: {menuResponse.historyCount} 件</p>
       {/* ボタン */}
       <div>
-        <button type="button" name="option" value="onetime" onClick={() => handleNavigate("onetime")}>
-          新規作成
+        <button type="button" name="creationType" value="onetime" onClick={() => handleNavigate("onetime")}>
+          単発作成
         </button>
-        <button type="button" disabled>
-          継続作成
+        <button type="button" name="creationType" value="regular" disabled>
+          定期作成
         </button>
-        <button type="button" disabled>
+        <button type="button" name="creationType" value="reading" disabled>
           履歴
         </button>
       </div>

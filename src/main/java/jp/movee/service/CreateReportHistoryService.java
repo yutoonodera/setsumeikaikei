@@ -18,10 +18,10 @@ public class CreateReportHistoryService {
         this.repository = repository;
     }
 
-    public void saveHistory(int menuId, int reportId, long reportOrgId) {
+    public void saveHistory( String creationType, String reportType, long reportOrgId) {
         CreateReportHistory history = new CreateReportHistory();
-        history.setMenuId(menuId);
-        history.setReportId(reportId);
+        history.setCreationType(creationType);
+        history.setReportType(reportType);
         history.setReportOrgId(reportOrgId);
         history.setCreatedAt(Timestamp.valueOf(LocalDateTime.now())); // 現在時刻をセット
 

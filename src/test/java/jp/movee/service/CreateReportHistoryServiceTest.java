@@ -28,12 +28,12 @@ class CreateReportHistoryServiceTest {
     @Test
     void saveHistory_Success() {
         // Arrange（準備）
-        int menuId = 1;
-        int reportId = 100;
+        String creationType = "1";
+        String reportType = "2";
         long reportOrgId = 200L;
 
         // Act（実行）
-        service.saveHistory(menuId, reportId, reportOrgId);
+        service.saveHistory(creationType, reportType, reportOrgId);
 
         // Assert（検証）
         // 保存されたエンティティをキャプチャ
@@ -41,8 +41,8 @@ class CreateReportHistoryServiceTest {
         verify(repository, times(1)).save(captor.capture());
 
         CreateReportHistory savedEntity = captor.getValue();
-        assertEquals(menuId, savedEntity.getMenuId());
-        assertEquals(reportId, savedEntity.getReportId());
+        assertEquals(creationType, savedEntity.getCreationType());
+        assertEquals(reportType, savedEntity.getReportType());
         assertEquals(reportOrgId, savedEntity.getReportOrgId());
         assertNotNull(savedEntity.getCreatedAt());
         assertTrue(savedEntity.getCreatedAt().before(Timestamp.valueOf(LocalDateTime.now().plusSeconds(1))));

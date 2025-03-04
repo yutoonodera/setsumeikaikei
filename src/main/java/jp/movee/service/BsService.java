@@ -18,11 +18,11 @@ public class BsService {
         this.repository = repository;
     }
 
-    public long saveHistory(String title, int menuId, int reportId) {
+    public long saveHistory(String title, String creationType, String reportType) {
         Bs bs = new Bs();
         bs.setTitle(title);
-        bs.setMenuId(menuId);
-        bs.setReportId(reportId);
+        bs.setCreationType(creationType);
+        bs.setReportType(reportType);
         bs.setCreatedAt(Timestamp.valueOf(LocalDateTime.now())); // 現在時刻をセット
 
         Bs bsHistory = repository.save(bs);

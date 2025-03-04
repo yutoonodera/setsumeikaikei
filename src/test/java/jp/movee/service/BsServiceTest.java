@@ -35,15 +35,15 @@ class BsServiceTest {
         Bs mockBs = new Bs();
         mockBs.setId(100L); // モックのID
         mockBs.setTitle("Test Title");
-        mockBs.setMenuId(1);
-        mockBs.setReportId(2);
+        mockBs.setCreationType("1");
+        mockBs.setReportType("2");
         mockBs.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
         // repository.save() の戻り値をモック
         when(repository.save(any(Bs.class))).thenReturn(mockBs);
 
         // メソッドを実行
-        long savedId = bsService.saveHistory("Test Title", 1, 2);
+        long savedId = bsService.saveHistory("Test Title", "1", "2");
 
         // 結果を検証
         assertEquals(100L, savedId);
