@@ -16,16 +16,16 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "*") 
 @RequiredArgsConstructor
 @ResponseBody
-public class MenuController {
+public class CreationController {
 	
 	private final CreateReportHistoryRepository createReportHistoryRepository;
     @GetMapping("/api/v1")
     public Map<String, Object> home() {
         long count = createReportHistoryRepository.count();
-        Map<String, Object> menuResponse = new HashMap<>();
-        menuResponse.put("message", "選択してください");
-        menuResponse.put("notice", "継続作成、閲覧はログイン後に利用可能です");
-        menuResponse.put("historyCount", count);
-        return menuResponse;
+        Map<String, Object> creationResponse = new HashMap<>();
+        creationResponse.put("message", "選択してください");
+        creationResponse.put("notice", "継続作成、閲覧はログイン後に利用可能です");
+        creationResponse.put("historyCount", count);
+        return creationResponse;
     }
 }
