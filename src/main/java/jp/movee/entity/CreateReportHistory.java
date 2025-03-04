@@ -19,9 +19,9 @@ public class CreateReportHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Integer menuId;
+    private String creationType;
 
-    private Integer reportId;
+    private String reportType;
     
     private long reportOrgId;
 

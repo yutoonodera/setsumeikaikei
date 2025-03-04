@@ -21,9 +21,9 @@ public class Bs {
     
     private String title;
 
-    private Integer menuId;
+    private String creationType;
     
-    private Integer reportId;
+    private String reportType;
     
     private Timestamp createdAt;
 }

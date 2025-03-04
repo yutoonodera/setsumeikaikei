@@ -7,10 +7,10 @@ export const Report = () => {
   const [errorMessage, setErrorMessage] = useState(""); // エラーメッセージのステートを追加
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const reportOption = searchParams.get("option");
+  const creationType = searchParams.get("creationType");
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    reportOption: reportOption,
+    creationType: creationType,
     reportType: "1",
     title: "",
     frequency: "onetime"
@@ -18,19 +18,19 @@ export const Report = () => {
 
   useEffect(() => {
     console.log('Fetching report data...');
-    fetch(`http://localhost:8080/api/report?option=${reportOption}`, { method: "GET" })
+    fetch(`http://localhost:8080/api/report?creationType=${creationType}`, { method: "GET" })
       .then((res) => res.json())
       .then((data) => {
         setReportResponse(data);
         setFormData((prevData) => ({
           ...prevData,
-          reportOption: reportOption
+          creationType: creationType
         }));
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [reportOption]);
+  }, [creationType]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

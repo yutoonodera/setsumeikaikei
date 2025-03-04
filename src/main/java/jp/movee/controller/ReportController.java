@@ -41,37 +41,14 @@ public class ReportController {
     
     @PostMapping("/api/report/register")
     public Map<String, String> createHistory(@RequestBody Map<String, String> formData) {
-        String reportOption = formData.get("reportOption");
+        String creationType = formData.get("creationType");
         String reportType = formData.get("reportType");
         String title = formData.get("title");
-        String frequency = formData.get("frequency");
-
-        // メニューIDを決定（例: BS=1, PL=2, CS=3）
-        int menuId;
-        switch (reportType) {
-            case "1":
-                menuId = 1;
-                break;
-            case "2":
-                menuId = 2;
-                break;
-            case "3":
-                menuId = 3;
-                break;
-            default:
-                menuId = 0;
-        }
-
-        // 諸表IDを決定（頻度ごとに割り振る例）
-        int reportId = switch (frequency) {
-            case "onetime" -> 10;
-            case "weekly" -> 20;
-            case "monthly" -> 30;
-            default -> 0;
-        };
-        long bsId = bsService.saveHistory(title, menuId, reportId);
+        //String frequency = formData.get("frequency");
+        
+        long bsId = bsService.saveHistory(title, creationType, reportType);
         // `create_report_history` にデータ登録
-        historyService.saveHistory(menuId, reportId, bsId);
+        historyService.saveHistory(creationType, reportType, bsId);
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "データが正常に登録されました");
