@@ -84,7 +84,6 @@ export const Report = () => {
     <div>
       <h1>{reportResponse.message || "Placeholder text"}</h1>
       <h3>{reportResponse.notice || "Placeholder text"}</h3>
-      <p>データ件数: {reportResponse.historyCount} 件</p>
       {/* フォームの追加 */}
       <form onSubmit={handleSubmit}>
         <label>
@@ -129,18 +128,6 @@ export const Report = () => {
           onChange={handleInputChange}
           maxLength="255"
         />
-        <br />
-        <label htmlFor="frequency">頻度を選択：</label>
-        <select
-          name="frequency"
-          id="frequency"
-          value={formData.frequency}
-          onChange={handleInputChange}
-        >
-          <option value="onetime">1回</option>
-          <option value="weekly">毎週</option>
-          <option value="monthly">毎月</option>
-        </select>
         <br />
         <button type="submit">作成する</button>
       </form>
