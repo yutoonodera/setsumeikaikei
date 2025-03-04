@@ -29,7 +29,7 @@ const BsGraph = () => {
       if (initialData.totalAssets !== 0 || initialData.totalLiabilities !== 0 || initialData.totalCapital !== 0) {
         console.log('fetchData initialData:', initialData); // デバッグ用
         try {
-          const response = await fetch('/api/bs', {
+          const response = await fetch('/api/v1/bs', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ const BsGraph = () => {
   // PDFダウンロード関数
   const downloadPdf = async () => {
     const container = document.querySelector('.container'); // 対象のDOMを取得
-    const backLink = document.querySelector('a[href="/report/BS"]'); // 「戻る」リンクを取得
+    const backLink = document.querySelector('a[href="/report/bs"]'); // 「戻る」リンクを取得
     const downloadButton = document.querySelector('button'); // 「PDFをダウンロード」ボタンを取得
 
     if (!container) return;
@@ -112,7 +112,7 @@ const BsGraph = () => {
           </tr>
         </tbody>
       </table>
-      <a href="/report/BS">戻る</a>
+      <a href="/report/bs">戻る</a>
       <button onClick={downloadPdf}>PDFをダウンロード</button>
     </div>
   );

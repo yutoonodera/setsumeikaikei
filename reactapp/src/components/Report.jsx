@@ -18,7 +18,7 @@ export const Report = () => {
 
   useEffect(() => {
     console.log('Fetching report data...');
-    fetch(`http://localhost:8080/api/report?creationType=${creationType}`, { method: "GET" })
+    fetch(`http://localhost:8080/api/v1/report?creationType=${creationType}`, { method: "GET" })
       .then((res) => res.json())
       .then((data) => {
         setReportResponse(data);
@@ -60,7 +60,7 @@ export const Report = () => {
       return;
     }
 
-    fetch("http://localhost:8080/api/report/register", {
+    fetch("http://localhost:8080/api/v1/report/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

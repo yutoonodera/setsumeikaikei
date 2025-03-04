@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import jp.movee.dto.BSDto;
 
 @RestController
-@RequestMapping("/api/bs")
-public class BSController {
+@RequestMapping("/api/v1/bs")
+public class BsController {
 
     @PostMapping
     public ResponseEntity<?> validateAndCalculate(@RequestBody BSDto bsDto) {

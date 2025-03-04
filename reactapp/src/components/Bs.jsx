@@ -53,7 +53,7 @@ export const Bs = () => {
     } else {
     
       setErrorMessage(""); // エラーメッセージをクリア
-      navigate('/bsgraph', {
+      navigate('/bs/graph', {
         state: {
           totalAssets,
           totalLiabilities,
