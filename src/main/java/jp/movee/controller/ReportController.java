@@ -24,7 +24,7 @@ public class ReportController {
         this.historyService = historyService;
     }
 
-    @GetMapping("/api/report")
+    @GetMapping("/api/v1/report")
     public Map<String, String> handleMenu(@RequestParam(defaultValue = "") String option) {
         Map<String, String> reportResponse = new HashMap<>();
         reportResponse.put("message", "メニューを選択してください");
@@ -39,7 +39,7 @@ public class ReportController {
         return reportResponse;
     }
     
-    @PostMapping("/api/report/register")
+    @PostMapping("/api/v1/report/register")
     public Map<String, String> createHistory(@RequestBody Map<String, String> formData) {
         String creationType = formData.get("creationType");
         String reportType = formData.get("reportType");
